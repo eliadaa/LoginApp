@@ -17,13 +17,6 @@ def encrypt_md5(text):
     md5_hash = hash_object.hexdigest()
     return md5_hash
 
-#
-def iterate_rows_file():
-    with open("database2.txt", "r") as a_file:
-        for line in a_file:
-            stripped_line = line.strip()
-            print(stripped_line)
-
 
 # Designing window for registration
 def register():
@@ -56,8 +49,7 @@ def register_user():
     if not username_info.isalpha():
         register_error_alpha()
     else:
-        # file = open('database.txt', "a") #append to file
-        file = open('database2.txt', "a")  # append to file
+        file = open('database.txt', "a")  # append to file
         username_encrypted = encrypt_md5(username_info)
         password_encrypted = encrypt_md5(password_info)
         file.write(username_encrypted)
@@ -111,7 +103,7 @@ def login():
 
 
 def get_row_number_username_from_file(username_encrypted, password_encrypted):
-    file = open('database2.txt', "r")
+    file = open('database.txt', "r")
     res = []
     # get values into array
     for line in file:
@@ -163,12 +155,12 @@ def new_password_not_matching():
     global new_password_not_matching_screen
     new_password_not_matching_screen = Toplevel(login_success_screen)
     new_password_not_matching_screen.title("Failed")
-    new_password_not_matching_screen.geometry("150x100")
+    new_password_not_matching_screen.geometry("250x100")
     Label(new_password_not_matching_screen, text="New Password NOT Matching ").pack()
     Button(new_password_not_matching_screen, text="OK", command=delete_new_password_not_matching).pack()
 
 def write_into_file(text_array):
-    fout = open('database2.txt', 'w')
+    fout = open('database.txt', 'w')
 
     for line in text_array:
         fout.write(line)
@@ -176,7 +168,7 @@ def write_into_file(text_array):
     fout.close()
 
 def change_password_funct(username2_encrypted, old_password2_encrypted, new_password2_encrypted):
-    file = open('database2.txt', "r")
+    file = open('database.txt', "r")
     res = []
     result = []
     found = 0
@@ -223,23 +215,24 @@ def change_password():
 
     if new_password2_encrypted != confirm_new_password2_encrypted:
         new_password_not_matching()
-
-    row = change_password_funct(username2_encrypted, old_password2_encrypted, new_password2_encrypted)
-    if row != 0:  # we found the username at a position/row
-        print("found at position/row: ")
-        print(row)
-        changed_password_success()  # here make another window to print changed password success
     else:
-        print("not found, returned: ")
-        print(row)
-        password_not_recognised()
+        row = change_password_funct(username2_encrypted, old_password2_encrypted, new_password2_encrypted)
+        if row != 0:  # we found the username at a position/row
+            print("found at position/row: ")
+            print(row)
+            changed_password_success()  # here make another window to print changed password success
+        else:
+            print("not found, returned: ")
+            print(row)
+            password_not_recognised()
 
 # # # Designing popup for changed password success
 def changed_password_success():
     global changed_password_success_screen
     changed_password_success_screen = Toplevel(login_screen)
     changed_password_success_screen.title("Success")
-    changed_password_success_screen.geometry("250x200")
+    changed_password_success_screen.geometry("250x100")    # width, length
+    Label(changed_password_success_screen, text="\n").pack()
     Label(changed_password_success_screen, text="Changed Password Successfully", fg="green").pack()
     Button(changed_password_success_screen, text="OK", command=delete_changed_password_success).pack()   #DELETE SCREEN HERE
 
